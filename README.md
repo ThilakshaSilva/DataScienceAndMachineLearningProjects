@@ -30,7 +30,7 @@ In this project I practiced a Machine Learning technique, Natural Language Proce
 
 5. Capstone Project: MoneyBall
 
-In this project I helped the 'Oakland A Baseball Team' to recruit three under-valued players to replace three lost players. I used my R skills to dig in data mining (including feature engineering, data merging and data analysis) to derive actionable insights!
+In this project I helped the 'Oakland A Baseball Team' to recruit three under-valued players to replace three lost players. I used my R skills to dig in data mining (including feature engineering, data wrangling and data analysis) to derive actionable insights!
 
 
 6. Data Visualisation Project
