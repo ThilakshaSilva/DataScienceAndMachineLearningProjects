@@ -35,7 +35,7 @@ In this project I helped the 'Oakland A Baseball Team' to recruit three under-va
 
 6. Data Visualisation Project
 
-
+I used my skills on R package ggplot2 to recreate a plot from The Economist (https://www.economist.com/blogs/dailychart/2011/12/corruption-and-development).
 
 
 
