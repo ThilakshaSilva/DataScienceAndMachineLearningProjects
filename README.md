@@ -19,6 +19,9 @@ With this exploration, I have acquired a great deal of knowledge about Machine L
 3. Kaggle Competition Machine Learning Project: Bike Sharing Demand
 
 
+https://www.kaggle.com/c/bike-sharing-demand
+
+
 
 4. Machine Learning Project: Create a Word Cloud
 
@@ -28,4 +31,14 @@ In this project I practiced a Machine Learning technique, Natural Language Proce
 5. Capstone Project: MoneyBall
 
 In this project I helped the 'Oakland A Baseball Team' to recruit three under-valued players to replace three lost players. I used my R skills to dig in data mining (including feature engineering, data merging and data analysis) to derive actionable insights!
+
+
+6. Data Visualisation Project
+
+
+
+
+
+
+
 
