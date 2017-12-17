@@ -2,7 +2,7 @@
 
 1. R project: R package densityEst
 
-I have produced an R package and that estimates a time series of density functions using logspline approach. You can install the development version from Github
+I have produced an R package that estimates a time series of density functions using logspline approach. You can install the development version from Github
 #install.packages("devtools")
 devtools::install_github("ThilakshaSilva/densityEst")
 
@@ -19,11 +19,6 @@ With this exploration, I have acquired a great deal of knowledge about Machine L
 
 
 
-4. Capstone Project: MoneyBall Project
+4. Capstone Project: MoneyBall
 
-In this project I helped the 'Oakland A Baseball Team' to recruit three under-valued players to replace three lost players. 
-
-
-
-
-
+In this project I helped the 'Oakland A Baseball Team' to recruit three under-valued players to replace three lost players. I used my R skills to dig in data mining (including feature engineering, data merging and data analysis) to derive actionable insights!
