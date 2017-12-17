@@ -18,7 +18,7 @@ With this exploration, I have acquired a great deal of knowledge about Machine L
 
 3. Kaggle Competition Machine Learning Project: Bike Sharing Demand
 
-In this Kaggle challenge (https://www.kaggle.com/c/bike-sharing-demand) I employ three machine learning techniques - Multiple Linear Regression, Support Vector Regression, and Random Forest Regression - to forecast the bike rental demand. I have also developed skills on feature engineering and exploratory data analysis.
+In this Kaggle Challenge 'Bike Sharing Demand' (https://www.kaggle.com/c/bike-sharing-demand) I employ three machine learning techniques - Multiple Linear Regression, Support Vector Regression, and Random Forest Regression - to forecast the bike rental demand. I have also developed skills on feature engineering and exploratory data analysis.
 
 
 4. Machine Learning Project: Create a Word Cloud
