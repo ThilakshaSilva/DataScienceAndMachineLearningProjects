@@ -1,9 +1,11 @@
 # Data Science and Machine Learning Projects
 
-1. R project: R package densityEst
+1. R Project: R package densityEst
 
 I have produced an R package that estimates a time series of density functions using logspline approach. You can install the development version from Github
+
 #install.packages("devtools")
+
 devtools::install_github("ThilakshaSilva/densityEst")
 
 
