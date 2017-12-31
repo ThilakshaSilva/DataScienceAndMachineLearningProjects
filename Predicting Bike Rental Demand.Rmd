@@ -1,0 +1,207 @@
+---
+title: "Predicting Bike Rental Demand"
+author: 'Thilaksha Silva'
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    highlight: haddock
+    number_sections: yes
+    theme: readable
+    toc: yes
+---
+
+# Introduction
+
+In this Kaggle challenge I employ three machine learning techniques to forecast the bike rental demand. I will guide you through my journey of predicting bike demand. 
+
+```{r, message = FALSE, warning=FALSE}
+# Load all the packages required for the analysis
+library(ggplot2) # Visualisation
+library(dplyr) # Data Wrangling
+library(e1071) # Prediction: SVR
+library(randomForest) # Prediction: Random Forest
+```
+
+```{r}
+train = read.csv('train.csv')
+test = read.csv('test.csv')
+```
+
+
+
+# Exploratory Data Analysis
+
+```{r}
+ggplot(train,aes(temp,count)) + 
+  geom_point(aes(color=temp),alpha=0.2) + theme_bw()
+```
+
+This is a scatterplot of temperature versus count with a color gradient based on temperature. The plot depicts the bike rental count increases as the temperature increases.
+
+Let's plot a scatterplot of datetime versus count with a color gradient based on temperature. However, we need to first convert the datetime into POSIXct format.
+
+```{r, warning=FALSE}
+train$datetime = as.POSIXct(train$datetime, format="%Y-%m-%d %H:%M:%S") 
+
+ggplot(train,aes(datetime,count)) + 
+  geom_point(aes(color=temp),alpha=0.2) + 
+  scale_color_gradient(high='purple',low='green') + 
+  theme_bw() 
+```
+
+It can be clearly seen the winter and summer seasonalities of the data. As seen on the previous scatterplot, this scatterplot shows the rental counts are increasing in general. 
+
+Let's explore the season data using a box plot.
+
+```{r}
+train$season = factor(train$season)
+
+ggplot(train,aes(season,count)) + 
+  geom_boxplot(aes(color=season),alpha=0.2) + 
+  theme_bw()
+```
+
+Surprisingly, there are more rentals in winter (season 4) than in spring (season 1).
+
+
+
+# Feature Engineering
+
+I engineer a new feature from the datetime column. Let's create an **hour** column that takes the hour from the datetime column.
+
+```{r}
+train$hour = sapply(train$datetime, function(x) format(x,"%H"))
+head(train)
+```
+
+Now I create a scatterplot of hour versus count with color scale based on temperature. First create the plot for the working days.
+
+```{r}
+ggplot(filter(train,workingday==1),aes(hour,count)) +
+  geom_point(aes(color=temp),alpha=0.5,position=position_jitter(w=1, h=0)) + #position_jitter adds random noise in order to read the plot easier
+  scale_color_gradientn(colors=c('dark blue','blue','light blue','light green','yellow','orange','red')) +
+  theme_bw()
+```
+
+Now create the same plot for the non working days.
+
+```{r}
+ggplot(filter(train,workingday==0),aes(hour,count)) +
+  geom_point(aes(color=temp),alpha=0.5,position=position_jitter(w=1, h=0)) + 
+  scale_color_gradientn(colors=c('dark blue','blue','light blue','light green','yellow','orange','red')) +
+  theme_bw()
+```
+
+The plots illustrate the working days have peak bike activity during the morning (around 8am) and right after work (around 6pm), with some lunchtime activity. Whereas the non-working days have a steady rise and fall for the afternoon.
+
+
+
+# Prediction
+
+Change the hour column to a column of numeric values.
+
+```{r}
+train$hour = sapply(train$hour, as.numeric)
+```
+
+Let's check whether missing values exist. 
+
+```{r}
+# Checking missing data
+sapply(train, function(x) sum(is.na(x)))
+
+# Extract the rows with missing values
+filter(train, is.na(hour)==TRUE|hour=='')
+
+# Remove missing data rows
+train = filter(train, is.na(hour)!=TRUE)
+```
+
+```{r}
+cor(train$temp,train$atemp)
+```
+
+The features temp and atemp are strongly correlated. If both features are included in the model, this will cause the issue of **Multicollinearity** (a given feature in the model can be approximated by a linear combination of the other features in the model). 
+
+* Hence I include only one temperature feature into the model.
+
+* The features **casual** and **registered** are omitted because that is what we are going to predict.
+
+* The feature **datetime** is omitted since the new feature **hour** is included in the model and which is more meaningful in predicting the bike rental demand.
+
+Let's continue on building a model to forecast bike rental demand.
+
+
+## Multiple Linear Regression
+
+```{r}
+# Fitting Multiple Linear Regression to the Training set
+train_subset = select(train, season, holiday, workingday, weather, temp, humidity, windspeed, count, hour)
+regressor = lm(formula = count ~ . , data = train_subset)
+
+# Choosing the best model by AIC in a Stepwise Algorithm
+# The step() function iteratively removes insignificant features from the model.
+regressor = step(regressor)
+
+# Predicting the Test set results
+test$datetime = as.POSIXct(test$datetime, format="%Y-%m-%d %H:%M:%S") 
+test$hour = sapply(test$datetime, function(x) format(x,"%H"))
+test$hour = sapply(test$hour, as.numeric)
+test$season = factor(test$season)
+y_pred = predict(regressor, test)
+
+# Save the results
+results <- data.frame(datetime = test$datetime, count = y_pred)
+
+# Write the results to a csv file
+write.csv(results, file = 'BikeSharingDemand_MLR.csv', row.names = FALSE, quote=FALSE)
+```
+
+
+## Support Vector Regression
+
+```{r}
+# Fitting SVR to the dataset
+regressor = svm(formula = count ~ .,
+                data = train_subset,
+                type = 'eps-regression',
+                kernel = 'radial')
+
+# Predicting a new result
+y_pred = predict(regressor, test)
+
+# Save the results
+results <- data.frame(datetime = test$datetime, count = y_pred)
+
+# Write the results to a csv file
+write.csv(results, file = 'BikeSharingDemand_SVR.csv', row.names = FALSE, quote=FALSE)
+```
+
+
+## Random Forest Regression
+
+```{r}
+# Fitting Random Forest Regression to the dataset
+set.seed(743)
+regressor = randomForest(x = train_subset[,-which(names(train_subset)=="count")],
+                         y = train_subset$count)
+
+# Predicting a new result with Random Forest Regression
+y_pred = predict(regressor, test)
+
+# Save the results
+results <- data.frame(datetime = test$datetime, count = y_pred)
+
+# Write the results to a csv file
+write.csv(results, file = 'BikeSharingDemand_RandomForest.csv', row.names = FALSE, quote=FALSE)
+```
+
+
+
+# Conclusion
+
+Predictions from Multiple Linear Regression and Support Vector Regression contain negative values. Random Forest Regression prediction results were successfully submitted. 
+
+I am eager to learn more and develop skills on machine learning. Any feedback is very welcome!
+
