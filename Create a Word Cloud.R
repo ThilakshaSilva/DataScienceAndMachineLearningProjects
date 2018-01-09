@@ -31,10 +31,10 @@ library(wordcloud)
 library(RColorBrewer)
 
 # Step 2: Search for Topic on Twitter
-ckey <- "6uTe98KFulWW2io1qtSjYUuwW"
-skey <- "vvynDY3vaKs9G2qUTsNNz9wNjB9aO0aTQaHovkWyajPZpZg3DD"
-token <- "933321448852135936-NFiveAf89BxNvKTvgAzgf2lC6Kg4tgM"
-sectoken <- "FnxFrCOesIEkH8XLTGRAaCmyBrMNLuS6y0nReluMKPFce"
+ckey <- "..."
+skey <- "..."
+token <- "..."
+sectoken <- "..."
 setup_twitter_oauth(ckey, skey, token, sectoken)
 #Returning tweets
 soccer.tweets <- searchTwitter("statistics", n=500, lang="en")
