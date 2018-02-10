@@ -1,5 +1,5 @@
 # Capstone Project - MoneyBall
-# In this project I help the 'Oakland A Baseball Team' to recruit three under-valued players to replace three lost players.
+# In this project, I help the 'Oakland A Baseball Team' to recruit three under-valued players to replace three lost players.
 
 batting <- read.csv('Batting.csv')
 head(batting)
@@ -27,7 +27,7 @@ summary(batting)
 combo <- merge(batting,sal,by=c('playerID','yearID'))
 summary(combo)
 
-# Analyzing the Lost Players
+# Analysing the Lost Players
 three <- c('giambja01', 'damonjo01', 'saenzol01')
 lost_players <- subset(combo, playerID %in% three)
 lost_players <- subset(lost_players, yearID == 2001)
